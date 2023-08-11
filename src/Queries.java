@@ -47,7 +47,6 @@ public class Queries {
                     PBasic pbasic = new PBasic(PID,PName,PKind_ID,Soil_ID);
                 }
 
-
                 System.out.println();
             }
         }

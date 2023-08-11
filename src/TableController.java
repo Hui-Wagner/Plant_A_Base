@@ -9,6 +9,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -60,7 +62,53 @@ public class TableController {
 
     private void fetchTable() throws SQLException{
         String query = "SELECT * FROM patrishy_db.PBASIC";
-        queryHandler.executeQuery(query);
+        ResultSet resultSet = queryHandler.executeQuery(query);
+
+        ResultSetMetaData metadata = resultSet.getMetaData();
+        int columnCount = metadata.getColumnCount();
+
+        // Print column names
+        for (int i = 1; i <= columnCount; i++) {
+            String columnName = metadata.getColumnName(i);
+            System.out.print(columnName + "\t");
+        }
+        System.out.println(); // Print a new line after the column names
+
+        ObservableList<PBasic> pBasics = tableView.getItems();
+
+        // Print rows
+        while (resultSet.next()) {
+
+            //hold data
+            int PID = 0;
+            String PName = "";
+            int PKind_ID = 0;
+            int Soil_ID = 0;
+
+            for (int i = 1; i <= columnCount; i++) {
+                String columnValue = resultSet.getString(i);
+                System.out.print(columnValue + ",");
+
+                switch (columnCount) {
+                    case 1: PID = Integer.parseInt(columnValue);
+                        break;
+                    case 2: PName = columnValue;
+                        break;
+                    case 3: PKind_ID = Integer.parseInt(columnValue);
+                        break;
+                    case 4: Soil_ID = Integer.parseInt(columnValue);
+                        break;
+                }
+
+                //store into local tables
+                PBasic pbasic = new PBasic(PID,PName,PKind_ID,Soil_ID);
+                pBasics.add(pbasic);
+                tableView.setItems(pBasics);
+            }
+
+            System.out.println();
+        }
+
     }
 
     public void addToTable(PBasic pbasic) {
