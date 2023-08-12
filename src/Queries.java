@@ -1,4 +1,7 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class Queries {
 
@@ -35,6 +38,68 @@ public class Queries {
         }
     }
 
-}
+    public static String buildQuery(List<String> selectedColumns, List<String> tables,
+                                    Map<String, String> joinConditions,
+                                    Map<String, String> whereConditions) {
+        StringBuilder query = new StringBuilder("SELECT ");
+
+        // Add selected columns
+        query.append(String.join(", ", selectedColumns));
+
+        // Add tables
+        query.append(" FROM ");
+        query.append(String.join(", ", tables));
+
+        // Add join conditions if any
+        if (!joinConditions.isEmpty()) {
+            for (Map.Entry<String, String> entry : joinConditions.entrySet()) {
+                query.append(" JOIN ");
+                query.append(entry.getKey());
+                query.append(" ON ");
+                query.append(entry.getValue());
+            }
+        }
+
+        // Add where conditions if any
+        if (!whereConditions.isEmpty()) {
+            query.append(" WHERE ");
+            List<String> conditions = new ArrayList<>();
+            for (Map.Entry<String, String> entry : whereConditions.entrySet()) {
+                conditions.add(entry.getKey() + " = " + entry.getValue());
+            }
+            query.append(String.join(" AND ", conditions));
+        }
+
+        return query.toString();
+    }
+
+
+    public static void executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
+                                    Map<String, String> joinConditions,
+                                    Map<String, String> whereConditions) throws SQLException {
+        String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
+        System.out.println("Executing query: " + query);
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet results = stmt.executeQuery(query);
+
+            // Print column names
+            System.out.println(String.join("\t", selectedColumns));
+
+            // Print rows
+            while (results.next()) {
+                for (String column : selectedColumns) {
+                    System.out.print(results.getString(column) + "\t");
+                }
+                System.out.println();
+            }
+        }
+    }
+
+
+    }
+
+
+
+
 
 
