@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 public class PTables {
 
@@ -28,5 +31,27 @@ public class PTables {
 
     public boolean getIsEmpty() {
         return isEmpty;
+    }
+
+    @Override
+    public String toString() {
+        if(isEmpty) {
+            return "empty table";
+        }
+        String output = "Table output \n";
+        output+= row(columnNames);
+        for (int i = 0; i < rows.size(); i++) {
+            output+= "\n";
+            output+= row(rows.get(i));
+        }
+        return output;
+    }
+
+    private String row(String[] theRow) {
+        String output = "";
+        for (int i = 0; i < theRow.length; i++) {
+            output +=  theRow[i] + "\t";
+        }
+        return output;
     }
 }

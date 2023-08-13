@@ -82,6 +82,7 @@ public class TableController implements Initializable{
         } else {
             PTables theTable = QueryHandler.makeQuery(plantTypeNum,monthNum);
             System.out.println("table received. isEmpty: " + theTable.getIsEmpty());
+            System.out.println(theTable.toString());
         }
     }
 
