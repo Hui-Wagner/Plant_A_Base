@@ -71,9 +71,8 @@ public class TableController implements Initializable{
 //        this.queryHandler = queryHandler;
 //    }
 
-    //display PBasic
+    //retrieves query
     public void testButton(ActionEvent e) {
-        System.out.println("Test test!");
         //processing inputs
         //stop if any are null
         int plantTypeNum = fetchPlantType();
@@ -81,7 +80,8 @@ public class TableController implements Initializable{
         if(plantTypeNum == -1 || monthNum == -1) {
             System.out.println("Process failed, please make all choices in the query");
         } else {
-            QueryHandler.makeQuery(plantTypeNum,monthNum);
+            PTables theTable = QueryHandler.makeQuery(plantTypeNum,monthNum);
+            System.out.println("table received. isEmpty: " + theTable.getIsEmpty());
         }
     }
 

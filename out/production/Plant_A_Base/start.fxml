@@ -22,7 +22,7 @@
       </TableView>
       <TextField layoutX="371.0" layoutY="31.0" />
       <Text layoutX="371.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="still testing" />
-      <Text layoutX="25.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PBasic" />
+      <Text layoutX="25.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PTables" />
       <ChoiceBox fx:id="myPlantTypeChoiceBox" layoutX="435.0" layoutY="84.0" prefWidth="150.0" />
       <Label layoutX="435.0" layoutY="66.0" text="Plant Type" />
       <ChoiceBox fx:id="myMonthChoiceBox" layoutX="435.0" layoutY="134.0" prefWidth="150.0" />

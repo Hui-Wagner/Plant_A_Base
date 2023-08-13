@@ -6,7 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 public class QueryHandler {
-    public static void makeQuery(int thePlantType, int thePlantingMonth) {
+    public static PTables makeQuery(int thePlantType, int thePlantingMonth) {
+
+        PTables theTable = new PTables();
+
         try (Connection conn = ConnectDB.connect()) {
             System.out.println("Connected to the database!");
 
@@ -105,11 +108,16 @@ public class QueryHandler {
 
 
 // Execute the query using the defined components
-            Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
+            try {
+                theTable = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
+            } catch (Exception e) {
+                System.out.println("Table is empty: " + e);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Failed to connect to the database.");
         }
+        return theTable;
     }
 }
