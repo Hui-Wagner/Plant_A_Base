@@ -1,25 +1,25 @@
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class Main {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
+public class QueryHandler {
+    public static void makeQuery(int thePlantType, int thePlantingMonth) {
         try (Connection conn = ConnectDB.connect()) {
             System.out.println("Connected to the database!");
 
             System.out.println("Before you planting...");
             System.out.println("What kinds of plant you want to plant in your backyard?");
             System.out.println("1, Trees\n" +
-                               "2, Flowers\n" +
-                               "3, Bushes\n" +
-                               "4, Fruit'\n" +
-                               "5, Vegetables'\n" +
-                               "6, Succulent'\n" +
-                               "7, Vines'\n ");
-            int plantChoice = Integer.parseInt(scanner.nextLine());
+                    "2, Flowers\n" +
+                    "3, Bushes\n" +
+                    "4, Fruit'\n" +
+                    "5, Vegetables'\n" +
+                    "6, Succulent'\n" +
+                    "7, Vines'\n ");
+            int plantChoice = thePlantType;
 
             switch (plantChoice) {
                 case 1:
@@ -46,8 +46,7 @@ public class Main {
             }
 
             System.out.println("What months you are planning to plant? Type 1~12");
-            String plantMonths = scanner.nextLine();
-            int month = Integer.parseInt(plantMonths);
+            int month = thePlantingMonth;
 
             switch (month) {
                 case 1:
@@ -87,7 +86,6 @@ public class Main {
                     System.out.println("You are planning to plant in December");
                     break;
             }
-            scanner.close();
 
 // Define the columns you want to select
             List<String> selectedColumns = Arrays.asList("pbasic.PNAMES", "PACTIVITIES.PLANTING");
@@ -114,7 +112,4 @@ public class Main {
             System.out.println("Failed to connect to the database.");
         }
     }
-
 }
-
-

@@ -9,9 +9,9 @@ public class TableGUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Queries queryHandler = new Queries();
+        //Queries queryHandler = new Queries();
 
-        TableController controller = new TableController(queryHandler);
+        TableController controller = new TableController();
 
         // Load your FXML file and set the controller
         FXMLLoader loader = new FXMLLoader(getClass().getResource("start.fxml"));
