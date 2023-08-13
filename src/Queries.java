@@ -2,7 +2,6 @@ import java.sql.*;
 
 public class Queries {
 
-
     public static void getPBASIC(Connection conn) throws SQLException {
         String query = "SELECT * FROM patrishy_db.PBASIC";
         try (Statement stmt = conn.createStatement()) {

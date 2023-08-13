@@ -55,7 +55,7 @@ public class TableController {
         try {
             fetchTable();
         } catch (SQLException exception) {
-            System.out.printf("unable to make connection");
+            System.out.println("unable to make connection " + exception);
         }
 
     }
@@ -64,6 +64,7 @@ public class TableController {
         String query = "SELECT * FROM patrishy_db.PBASIC";
         ResultSet resultSet = queryHandler.executeQuery(query);
 
+        //tries to make a connection again
         ResultSetMetaData metadata = resultSet.getMetaData();
         int columnCount = metadata.getColumnCount();
 
