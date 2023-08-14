@@ -65,7 +65,11 @@ public class Queries {
             query.append(" WHERE ");
             List<String> conditions = new ArrayList<>();
             for (Map.Entry<String, String> entry : whereConditions.entrySet()) {
-                conditions.add(entry.getKey() + " = " + entry.getValue());
+                if (entry.getValue().contains("BETWEEN")) {
+                    conditions.add(entry.getKey() + " " + entry.getValue());
+                } else {
+                    conditions.add(entry.getKey() + " = " + entry.getValue());
+                }
             }
             query.append(String.join(" AND ", conditions));
         }

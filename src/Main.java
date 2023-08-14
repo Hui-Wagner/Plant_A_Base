@@ -55,11 +55,35 @@ public class Main {
         JComboBox<String> plantSoilType = new JComboBox<>(new String[]{"None", "Loamy", "Sandy", "Silty", "Peaty", "Chalky", "Clay"});
         panel.add(plantSoilType);
 
+        // Add Plant Temperature label and Plant Temperature drop-down option on GUI
+        JLabel labelPlantTemp = new JLabel("Temperature:");
+        panel.add(labelPlantTemp);
+
+        JComboBox<String> plantTemp = new JComboBox<>(new String[]{"None", "40F ~ 50F", "50F ~ 60F", "60F ~ 70F", "70F ~ 80F"});
+        panel.add(plantTemp);
+
+        // Add Plant PH label and Plant PH drop-down option on GUI
+        JLabel labelPlantPH = new JLabel("PH Value:");
+        panel.add(labelPlantPH);
+
+        JComboBox<String> plantPH = new JComboBox<>(new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"});
+        panel.add(plantPH);
+
+
+
+
+        // Add Sun Level label and Sun Level drop-down option on GUI
+//        JLabel labelSunLevel = new JLabel("Sun Level:");
+//        panel.add(labelSunLevel);
+//
+//        JComboBox<String> plantSunLevel = new JComboBox<>(new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"});
+//        panel.add(plantSunLevel);
+
         // Add Submit Button on GUI
         JButton btnSubmit = new JButton("Submit");
         panel.add(btnSubmit);
 
-        // Add Text Area for displaying the data that returns from database
+        // Set Text Area for displaying the data that returns from database
         JTextArea txtResults = new JTextArea(30, 50);
         txtResults.setEditable(false);
         JScrollPane scrollResults = new JScrollPane(txtResults);
@@ -75,6 +99,15 @@ public class Main {
                 int bloomMonth = bloomingMonth.getSelectedIndex();
                 int harvestMonth = harvestingMonth.getSelectedIndex();
                 int soilType = plantSoilType.getSelectedIndex();
+                int temp = plantTemp.getSelectedIndex();
+                int PH =plantPH.getSelectedIndex();
+
+
+
+
+//                int sunLevel = plantSunLevel.getSelectedIndex();
+
+
 
                 //Connect to the database and building up the query by user's demand
                 try (Connection conn = ConnectDB.connect()) {
@@ -94,6 +127,15 @@ public class Main {
 
                     if (soilType > 0) {selectedColumns.add("SKINDS.Soil_Type"); selectedColumns.add("SKINDS.Soil_Description");}
 
+                    if (temp > 0) {selectedColumns.add("PDETAILED.Temperature");}
+
+                    if (PH > 0) {selectedColumns.add("PDETAILED.PH");}
+
+
+
+
+
+//                    if (sunLevel > 0) selectedColumns.add("SUNLEVELS.Sunlevel");
 
                     List<String> tables = Arrays.asList("patrishy_db.PBASIC");
                     Map<String, String> joinConditions = new HashMap<>();
@@ -104,20 +146,47 @@ public class Main {
                         whereConditions.put("PBASIC.PKind_ID", "'" + plantType + "'");
                     }
 
-
                     if (plantMonth != 0 || bloomMonth != 0 || harvestMonth != 0) {
                         joinConditions.put("patrishy_db.PACTIVITIES", "PBASIC.PID = PACTIVITIES.PID");
                         if (plantMonth > 0) whereConditions.put("PACTIVITIES.Planting", "'" + plantMonth + "'");
                         if (bloomMonth > 0) whereConditions.put("PACTIVITIES.Blooming", "'" + bloomMonth + "'");
                         if (harvestMonth > 0) whereConditions.put("PACTIVITIES.Harvesting", "'" + harvestMonth + "'");
-                        whereConditions.put("PBASIC.PKind_ID", "'" + plantType + "'");
                     }
-
 
                     if (soilType != 0) {
                         joinConditions.put("patrishy_db.SKINDS", "PBASIC.Soil_ID = SKINDS.Soil_ID");
                         whereConditions.put("SKINDS.Soil_ID", "'" + soilType + "'");
                     }
+
+                    if (temp != 0) {
+                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
+                        int minTemp = 40 + (temp - 1) * 10;
+                        int maxTemp = 50 + (temp - 1) * 10;
+                        whereConditions.put("PDETAILED.Temperature", "BETWEEN " + minTemp + " AND " + maxTemp);
+                    }
+
+                    if (PH != 0) {
+                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
+                        double minPH = 5.0 + (PH - 1) * 0.5;
+                        double maxPH = 5.5 + (PH - 1) * 0.5;
+                        whereConditions.put("PDETAILED.PH", "BETWEEN " + minPH + " AND " + maxPH);
+                    }
+
+
+
+
+
+
+
+
+
+
+
+//                    if (sunLevel != 0) {
+//                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
+//                        joinConditions.put("patrishy_db.SUNLEVELS", "PDETAILED.Sunlevel_ID = SUNLEVELS.Sunlevel_ID");
+//                        whereConditions.put("SUNLEVELS.Sunlevel_ID", "'" + sunLevel + "'");
+//                    }
 
                     String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
                     txtResults.setText(results);
@@ -128,7 +197,6 @@ public class Main {
                 }
             }
         });
-
         frame.setVisible(true);
     }
 }
