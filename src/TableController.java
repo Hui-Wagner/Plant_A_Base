@@ -1,35 +1,32 @@
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class TableController implements Initializable{
 
-    private Queries queryHandler;
-
     @FXML
-    private TableView<PTables> tableView;
-
+    private TableView<Table> tableView = new TableView<Table>();
     @FXML
-    private TableColumn<PTables, Integer> PID;
-
+    private TableColumn<Table, String> column1;
     @FXML
-    private TableColumn<PTables, String> PNames;
-
+    private TableColumn<Table, String> column2;
     @FXML
-    private TableColumn<PTables, Integer> PKind_ID;
-
+    private TableColumn<Table, String> column3;
     @FXML
-    private TableColumn<PTables, Integer> Soil_ID;
-
+    private TableColumn<Table, String> column4;
     @FXML
-    private TextField nameInput;
+    private TableColumn<Table, String> column5;
+    @FXML
+    private TableColumn<Table, String> column6;
 
     @FXML
     private ChoiceBox<String> myPlantTypeChoiceBox;
@@ -44,10 +41,12 @@ public class TableController implements Initializable{
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //tables
-//        PID.setCellValueFactory(new PropertyValueFactory<PBasic, Integer>("PID"));
-//        PNames.setCellValueFactory(new PropertyValueFactory<PBasic, String>("PName"));
-//        PKind_ID.setCellValueFactory(new PropertyValueFactory<PBasic, Integer>("PKind_ID"));
-//        Soil_ID.setCellValueFactory(new PropertyValueFactory<PBasic, Integer>("Soil_ID"));
+        column1.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
+        column2.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
+        column3.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
+        column4.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
+//        column5.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
+//        column6.setCellValueFactory(new PropertyValueFactory<Table, String>(""));
 
         //add all plant types
         myPlantTypeChoiceBox.getItems().addAll(plantTypes);
@@ -67,12 +66,8 @@ public class TableController implements Initializable{
         System.out.println(myMonth);
     }
 
-//    public TableController (Queries queryHandler) {
-//        this.queryHandler = queryHandler;
-//    }
-
     //retrieves query
-    public void testButton(ActionEvent e) {
+    public void submitQuery(ActionEvent e) {
         //processing inputs
         //stop if any are null
         int plantTypeNum = fetchPlantType();
@@ -80,9 +75,10 @@ public class TableController implements Initializable{
         if(plantTypeNum == -1 || monthNum == -1) {
             System.out.println("Process failed, please make all choices in the query");
         } else {
-            PTables theTable = QueryHandler.makeQuery(plantTypeNum,monthNum);
-            System.out.println("table received. isEmpty: " + theTable.getIsEmpty());
-            System.out.println(theTable.toString());
+            PTables thePTable = QueryHandler.makeQuery(plantTypeNum,monthNum);
+            System.out.println("table received. isEmpty: " + thePTable.getIsEmpty());
+            System.out.println(thePTable.toString());
+            updateUI(thePTable);
         }
     }
 
@@ -113,65 +109,41 @@ public class TableController implements Initializable{
         return monthNum;
     }
 
-//    private void fetchTable() throws SQLException{
-//        String query = "SELECT * FROM patrishy_db.PBASIC";
-//        ResultSet resultSet = queryHandler.executeQuery(query);
-//
-//        //tries to make a connection again
-//        ResultSetMetaData metadata = resultSet.getMetaData();
-//        int columnCount = metadata.getColumnCount();
-//
-//        // Print column names
-//        for (int i = 1; i <= columnCount; i++) {
-//            String columnName = metadata.getColumnName(i);
-//            System.out.print(columnName + "\t");
-//        }
-//        System.out.println(); // Print a new line after the column names
-//
-//        ObservableList<PBasic> pBasics = tableView.getItems();
-//
-//        // Print rows
-//        while (resultSet.next()) {
-//
-//            //hold data
-//            int PID = 0;
-//            String PName = "";
-//            int PKind_ID = 0;
-//            int Soil_ID = 0;
-//
-//            for (int i = 1; i <= columnCount; i++) {
-//                String columnValue = resultSet.getString(i);
-//                System.out.print(columnValue + ",");
-//
-//                switch (columnCount) {
-//                    case 1: PID = Integer.parseInt(columnValue);
-//                        break;
-//                    case 2: PName = columnValue;
-//                        break;
-//                    case 3: PKind_ID = Integer.parseInt(columnValue);
-//                        break;
-//                    case 4: Soil_ID = Integer.parseInt(columnValue);
-//                        break;
-//                }
-//
-//                //store into local tables
-//                PBasic pbasic = new PBasic(PID,PName,PKind_ID,Soil_ID);
-//                pBasics.add(pbasic);
-//                tableView.setItems(pBasics);
-//            }
-//
-//            System.out.println();
-//        }
-//
-//    }
 
-//    public void addToTable(PBasic pbasic) {
-//        ObservableList<PBasic> customers = tableView.getItems();
-//        customers.add(pbasic);
-//        tableView.setItems(customers);
-//    }
+    private void updateUI(PTables inputTable) {
+        System.out.println("updating UI");
+        //rename columns
+        String[] CNames = inputTable.getColumnNames();
+        //for each, up to four *can be adjusted later
+        int size = 4;
+        if(size > CNames.length) {
+            size = CNames.length;
+        }
+        for (int i = 0; i < size; i++) {
+            switch (i) {
+                case 0: column1 = new TableColumn<>(CNames[0]);
+                    break;
+                case 1: column2 = new TableColumn<>(CNames[0]);
+                    break;
+                case 2: column3 = new TableColumn<>(CNames[0]);
+                    break;
+                case 3: column4 = new TableColumn<>(CNames[0]);
+                    break;
+                case 4: column5 = new TableColumn<>(CNames[0]);
+                    break;
+                case 5: column6 = new TableColumn<>(CNames[0]);
+                    break;
+            }
+        }
 
-    private void updateUI() {
-
+        //digest PTables to add rows
+        List<String[]> rows = inputTable.getRows();
+        ObservableList<Table> allTables = tableView.getItems();
+        //each row
+        for (int i = 0; i < rows.size(); i++) {
+            Table currentRow = new Table(rows.get(i));
+            allTables.add(currentRow);
+        }
+        tableView.setItems(allTables);
     }
 }
