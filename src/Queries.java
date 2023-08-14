@@ -81,21 +81,28 @@ public class Queries {
         StringBuilder resultString = new StringBuilder();
         try (Statement stmt = conn.createStatement()) {
             ResultSet results = stmt.executeQuery(query);
+            ResultSetMetaData metadata = results.getMetaData();
+            int columnCount = metadata.getColumnCount();
 
             // Print column names
-            resultString.append(String.join("\t", selectedColumns)).append("\n");
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metadata.getColumnName(i);
+                resultString.append(columnName).append("\t");
+            }
+            resultString.append("\n");
 
             // Print rows
             while (results.next()) {
-                for (String column : selectedColumns) {
-                    resultString.append(results.getString(column)).append("\t");
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    resultString.append(columnValue).append("\t");
                 }
                 resultString.append("\n");
             }
         }
         return resultString.toString();
     }
-    }
+}
 
 
 
