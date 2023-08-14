@@ -1,119 +1,103 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLOutput;
 import java.util.*;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Planting A Base");
 
-        try (Connection conn = ConnectDB.connect()) {
-            System.out.println("Connected to the database!");
+            ImageIcon icon = new ImageIcon("other/icon.png");
+            Image iconImage = icon.getImage();
+            frame.setIconImage(iconImage); // Set the icon for the title bar
 
-            System.out.println("Before you planting...");
-            System.out.println("What kinds of plant you want to plant in your backyard?");
-            System.out.println("1, Trees\n" +
-                               "2, Flowers\n" +
-                               "3, Bushes\n" +
-                               "4, Fruit'\n" +
-                               "5, Vegetables'\n" +
-                               "6, Succulent'\n" +
-                               "7, Vines'\n ");
-            int plantChoice = Integer.parseInt(scanner.nextLine());
+            frame.setSize(1200, 600);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setResizable(false);
 
-            switch (plantChoice) {
-                case 1:
-                    System.out.println("You choose to plant Trees");
-                    break;
-                case 2:
-                    System.out.println("You choose to plant Flowers");
-                    break;
-                case 3:
-                    System.out.println("You choose to plant Bushes");
-                    break;
-                case 4:
-                    System.out.println("You choose to plant Fruit");
-                    break;
-                case 5:
-                    System.out.println("You choose to plant Vegetables");
-                    break;
-                case 6:
-                    System.out.println("You choose to plant Succulent");
-                    break;
-                case 7:
-                    System.out.println("You choose to plant Vines");
-                    break;
-            }
+            JPanel panel = new JPanel();
 
-            System.out.println("What months you are planning to plant? Type 1~12");
-            String plantMonths = scanner.nextLine();
-            int month = Integer.parseInt(plantMonths);
+            JLabel lblPlantType = new JLabel("Plant Type:");
+            panel.add(lblPlantType);
 
-            switch (month) {
-                case 1:
-                    System.out.println("You are planning to plant in January");
-                    break;
-                case 2:
-                    System.out.println("You are planning to plant in February");
-                    break;
-                case 3:
-                    System.out.println("You are planning to plant in March");
-                    break;
-                case 4:
-                    System.out.println("You are planning to plant in April");
-                    break;
-                case 5:
-                    System.out.println("You are planning to plant in May");
-                    break;
-                case 6:
-                    System.out.println("You are planning to plant in June");
-                    break;
-                case 7:
-                    System.out.println("You are planning to plant in July");
-                    break;
-                case 8:
-                    System.out.println("You are planning to plant in August");
-                    break;
-                case 9:
-                    System.out.println("You are planning to plant in September");
-                    break;
-                case 10:
-                    System.out.println("You are planning to plant in October");
-                    break;
-                case 11:
-                    System.out.println("You are planning to plant in November");
-                    break;
-                case 12:
-                    System.out.println("You are planning to plant in December");
-                    break;
-            }
-            scanner.close();
+            JComboBox<String> cboPlantType = new JComboBox<>(new String[]{"Trees", "Flowers", "Bushes", "Fruit", "Vegetables", "Succulent", "Vines"});
+            panel.add(cboPlantType);
 
-// Define the columns you want to select
-            List<String> selectedColumns = Arrays.asList("pbasic.PNAMES", "PACTIVITIES.PLANTING");
+            JLabel lblMonth = new JLabel("Planting Month:");
+            panel.add(lblMonth);
 
-// Define the tables you want to query
-            List<String> tables = Arrays.asList("patrishy_db.pbasic");
+            JComboBox<String> cboMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
+            panel.add(cboMonth);
 
-// Define any join conditions (if needed)
-            Map<String, String> joinConditions = new HashMap<>();
-            joinConditions.put("patrishy_db.PACTIVITIES", "pbasic.PID = PACTIVITIES.PID");
+            JLabel lblBloomingMonth = new JLabel("Blooming Month:");
+            panel.add(lblBloomingMonth);
 
+            JComboBox<String> cboBloomingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
+            panel.add(cboBloomingMonth);
 
-// Define where conditions based on user's input
-            Map<String, String> whereConditions = new HashMap<>();
-            whereConditions.put("PACTIVITIES.PLANTING", "'" + month + "'");
-            whereConditions.put("pbasic.PKIND_ID", "'" + plantChoice + "'");
+            JLabel lblHarvestingMonth = new JLabel("Harvesting Month:");
+            panel.add(lblHarvestingMonth);
 
+            JComboBox<String> cboHarvestingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
+            panel.add(cboHarvestingMonth);
 
-// Execute the query using the defined components
-            Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
+            JButton btnSubmit = new JButton("Submit");
+            panel.add(btnSubmit);
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Failed to connect to the database.");
-        }
+            JTextArea txtResults = new JTextArea(20, 40);
+            txtResults.setEditable(false);
+            JScrollPane scrollResults = new JScrollPane(txtResults);
+            panel.add(scrollResults);
+
+            frame.add(panel);
+
+            btnSubmit.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtilities.invokeLater(() -> {
+                        int plantChoice = cboPlantType.getSelectedIndex() + 1;
+                        int month = cboMonth.getSelectedIndex();
+                        int bloomingMonth = cboBloomingMonth.getSelectedIndex();
+                        int harvestingMonth = cboHarvestingMonth.getSelectedIndex();
+
+                        try (Connection conn = ConnectDB.connect()) {
+                            List<String> selectedColumns = new ArrayList<>();
+                            selectedColumns.add("pbasic.PNAMES");
+                            if (month > 0) selectedColumns.add("PACTIVITIES.PLANTING");
+                            if (bloomingMonth > 0) selectedColumns.add("PACTIVITIES.BLOOMING");
+                            if (harvestingMonth > 0) selectedColumns.add("PACTIVITIES.HARVESTING");
+
+                            List<String> tables = Arrays.asList("patrishy_db.pbasic");
+                            Map<String, String> joinConditions = new HashMap<>();
+                            joinConditions.put("patrishy_db.PACTIVITIES", "pbasic.PID = PACTIVITIES.PID");
+                            Map<String, String> whereConditions = new HashMap<>();
+                            if (month > 0) whereConditions.put("PACTIVITIES.PLANTING", "'" + month + "'");
+                            if (bloomingMonth > 0) whereConditions.put("PACTIVITIES.BLOOMING", "'" + bloomingMonth + "'");
+                            if (harvestingMonth > 0) whereConditions.put("PACTIVITIES.HARVESTING", "'" + harvestingMonth + "'");
+                            whereConditions.put("pbasic.PKIND_ID", "'" + plantChoice + "'");
+
+                            String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
+                            txtResults.setText(results);
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                            txtResults.setText("Failed to connect to the database.");
+                        }
+                    });
+                }
+            });
+
+            frame.setVisible(true);
+        });
     }
 }
+
+
+
+
 
 

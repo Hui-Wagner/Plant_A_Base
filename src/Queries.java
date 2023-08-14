@@ -74,28 +74,27 @@ public class Queries {
     }
 
 
-    public static void executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
-                                    Map<String, String> joinConditions,
-                                    Map<String, String> whereConditions) throws SQLException {
+    public static String executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
+                                      Map<String, String> joinConditions,
+                                      Map<String, String> whereConditions) throws SQLException {
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
-        System.out.println("Executing query: " + query);
+        StringBuilder resultString = new StringBuilder();
         try (Statement stmt = conn.createStatement()) {
             ResultSet results = stmt.executeQuery(query);
 
             // Print column names
-            System.out.println(String.join("\t", selectedColumns));
+            resultString.append(String.join("\t", selectedColumns)).append("\n");
 
             // Print rows
             while (results.next()) {
                 for (String column : selectedColumns) {
-                    System.out.print(results.getString(column) + "\t");
+                    resultString.append(results.getString(column)).append("\t");
                 }
-                System.out.println();
+                resultString.append("\n");
             }
         }
+        return resultString.toString();
     }
-
-
     }
 
 
