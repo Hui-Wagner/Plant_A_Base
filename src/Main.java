@@ -69,15 +69,19 @@ public class Main {
         JComboBox<String> plantPH = new JComboBox<>(new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"});
         panel.add(plantPH);
 
+        //Add Sun Level label and Sun Level drop-down option on GUI
+        JLabel labelSunLevel = new JLabel("Sun Level:");
+        panel.add(labelSunLevel);
 
+        JComboBox<String> plantSunLevel = new JComboBox<>(new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"});
+        panel.add(plantSunLevel);
 
+        //Add Water Level label and Water Level drop-down option on GUI
+        JLabel labelWaterLevel = new JLabel("Water Level:");
+        panel.add(labelWaterLevel);
 
-        // Add Sun Level label and Sun Level drop-down option on GUI
-//        JLabel labelSunLevel = new JLabel("Sun Level:");
-//        panel.add(labelSunLevel);
-//
-//        JComboBox<String> plantSunLevel = new JComboBox<>(new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"});
-//        panel.add(plantSunLevel);
+        JComboBox<String> plantWaterLevel = new JComboBox<>(new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"});
+        panel.add(plantWaterLevel);
 
         // Add Submit Button on GUI
         JButton btnSubmit = new JButton("Submit");
@@ -101,11 +105,8 @@ public class Main {
                 int soilType = plantSoilType.getSelectedIndex();
                 int temp = plantTemp.getSelectedIndex();
                 int PH =plantPH.getSelectedIndex();
-
-
-
-
-//                int sunLevel = plantSunLevel.getSelectedIndex();
+                int sunLevel = plantSunLevel.getSelectedIndex();
+                int waterLevel = plantWaterLevel.getSelectedIndex();
 
 
 
@@ -131,13 +132,12 @@ public class Main {
 
                     if (PH > 0) {selectedColumns.add("PDETAILED.PH");}
 
+                    if (sunLevel > 0) selectedColumns.add("SUNLEVELS.SunLevel");
+
+                    if (waterLevel > 0) selectedColumns.add("WLEVELS.WLevel");
 
 
-
-
-//                    if (sunLevel > 0) selectedColumns.add("SUNLEVELS.Sunlevel");
-
-                    List<String> tables = Arrays.asList("patrishy_db.PBASIC");
+                    List<String> tables = new ArrayList<>(Arrays.asList("patrishy_db.PBASIC"));
                     Map<String, String> joinConditions = new HashMap<>();
                     Map<String, String> whereConditions = new HashMap<>();
 
@@ -172,21 +172,18 @@ public class Main {
                         whereConditions.put("PDETAILED.PH", "BETWEEN " + minPH + " AND " + maxPH);
                     }
 
+                    if (sunLevel != 0) {
+                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
+                        joinConditions.put("patrishy_db.SUNLEVELS", "PDETAILED.SunLevel_ID = SUNLEVELS.SunLevel_ID");
+                        whereConditions.put("SUNLEVELS.SunLevel_ID", "'" + sunLevel + "'");
+                    }
 
+                    if (waterLevel != 0) {
+                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
+                        joinConditions.put("patrishy_db.WLEVELS", "PDETAILED.WLevel_ID = WLEVELS.WLevel_ID");
+                        whereConditions.put("SUNLEVELS.SunLevel_ID", "'" + sunLevel + "'");
 
-
-
-
-
-
-
-
-
-//                    if (sunLevel != 0) {
-//                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
-//                        joinConditions.put("patrishy_db.SUNLEVELS", "PDETAILED.Sunlevel_ID = SUNLEVELS.Sunlevel_ID");
-//                        whereConditions.put("SUNLEVELS.Sunlevel_ID", "'" + sunLevel + "'");
-//                    }
+                    }
 
                     String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
                     txtResults.setText(results);
