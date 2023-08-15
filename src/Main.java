@@ -1,9 +1,11 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.List;
 
 public class Main {
 
@@ -11,83 +13,89 @@ public class Main {
 
         // Set up Java Swing GUI
         JFrame frame = new JFrame("Planting A Base");
-        frame.setSize(1200, 800);
+        frame.setSize(900, 550);
+        frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        JPanel panel = new JPanel();
-        frame.add(panel);
+
+        JPanel TopPanel = new JPanel();
+        TopPanel.setPreferredSize(new Dimension(145, 550));
+        frame.add(TopPanel,BorderLayout.WEST);
+        JPanel CenterPanel = new JPanel();
+
+        frame.add(CenterPanel, BorderLayout.CENTER);
 
         // Add Plant Type label and Plant Type drop-down option on GUI
         JLabel labelPlantType = new JLabel("Plant Type:");
-        panel.add(labelPlantType);
+        TopPanel.add(labelPlantType);
 
         JComboBox<String> plantingType = new JComboBox<>(new String[]{"None","Trees", "Flowers", "Bushes", "Fruit", "Vegetables", "Succulent", "Vines"});
-        panel.add(plantingType);
+        TopPanel.add(plantingType);
 
         // Add Plant Month label and Plant Month drop-down option on GUI
         JLabel labelPlantMonth = new JLabel("Planting Month:");
-        panel.add(labelPlantMonth);
+        TopPanel.add(labelPlantMonth);
 
         JComboBox<String> plantingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        panel.add(plantingMonth);
+        TopPanel.add(plantingMonth);
 
         // Add Blooming Month label and Blooming Month drop-down option on GUI
         JLabel labelBloomMonth = new JLabel("Blooming Month:");
-        panel.add(labelBloomMonth);
+        TopPanel.add(labelBloomMonth);
 
         JComboBox<String> bloomingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        panel.add(bloomingMonth);
+        TopPanel.add(bloomingMonth);
 
         // Add Harvesting Month label and Harvesting Month drop-down option on GUI
         JLabel labelHarvestMonth = new JLabel("Harvesting Month:");
-        panel.add(labelHarvestMonth);
+        TopPanel.add(labelHarvestMonth);
 
         JComboBox<String> harvestingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        panel.add(harvestingMonth);
+        TopPanel.add(harvestingMonth);
 
         // Add Soil Type label and Soil Type drop-down option on GUI
         JLabel labelSoilType = new JLabel("Soil Type:");
-        panel.add(labelSoilType);
+        TopPanel.add(labelSoilType);
 
         JComboBox<String> plantSoilType = new JComboBox<>(new String[]{"None", "Loamy", "Sandy", "Silty", "Peaty", "Chalky", "Clay"});
-        panel.add(plantSoilType);
+        TopPanel.add(plantSoilType);
 
         // Add Plant Temperature label and Plant Temperature drop-down option on GUI
         JLabel labelPlantTemp = new JLabel("Temperature:");
-        panel.add(labelPlantTemp);
+        TopPanel.add(labelPlantTemp);
 
         JComboBox<String> plantTemp = new JComboBox<>(new String[]{"None", "40F ~ 50F", "50F ~ 60F", "60F ~ 70F", "70F ~ 80F"});
-        panel.add(plantTemp);
+        TopPanel.add(plantTemp);
 
         // Add Plant PH label and Plant PH drop-down option on GUI
         JLabel labelPlantPH = new JLabel("PH Value:");
-        panel.add(labelPlantPH);
+        TopPanel.add(labelPlantPH);
 
         JComboBox<String> plantPH = new JComboBox<>(new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"});
-        panel.add(plantPH);
+        TopPanel.add(plantPH);
 
         //Add Sun Level label and Sun Level drop-down option on GUI
         JLabel labelSunLevel = new JLabel("Sun Level:");
-        panel.add(labelSunLevel);
+        TopPanel.add(labelSunLevel);
 
         JComboBox<String> plantSunLevel = new JComboBox<>(new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"});
-        panel.add(plantSunLevel);
+        TopPanel.add(plantSunLevel);
 
         //Add Water Level label and Water Level drop-down option on GUI
         JLabel labelWaterLevel = new JLabel("Water Level:");
-        panel.add(labelWaterLevel);
+        TopPanel.add(labelWaterLevel);
 
         JComboBox<String> plantWaterLevel = new JComboBox<>(new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"});
-        panel.add(plantWaterLevel);
+        TopPanel.add(plantWaterLevel);
 
         // Add Submit Button on GUI
         JButton btnSubmit = new JButton("Submit");
-        panel.add(btnSubmit);
+        TopPanel.add(btnSubmit);
 
         // Set Text Area for displaying the data that returns from database
         JTextArea txtResults = new JTextArea(30, 50);
         txtResults.setEditable(false);
         JScrollPane scrollResults = new JScrollPane(txtResults);
-        panel.add(scrollResults);
+        CenterPanel.add(scrollResults);
 
         btnSubmit.addActionListener(new ActionListener() {
             @Override
@@ -202,6 +210,11 @@ public class Main {
         });
         frame.setVisible(true);
     }
+
+    //adjust column width to longest char length + 4
+    //font size, font type
+    //remove resizeable
+    //
 }
 
 
