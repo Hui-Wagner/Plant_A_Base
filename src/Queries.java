@@ -82,8 +82,10 @@ public class Queries {
     public static String executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
                                       Map<String, String> joinConditions,
                                       Map<String, String> whereConditions) throws SQLException {
+
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
         StringBuilder resultString = new StringBuilder();
+        
         try (Statement stmt = conn.createStatement()) {
             ResultSet results = stmt.executeQuery(query);
             ResultSetMetaData metadata = results.getMetaData();
