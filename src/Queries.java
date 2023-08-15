@@ -74,6 +74,7 @@ public class Queries {
             query.append(String.join(" AND ", conditions));
         }
 
+        System.out.println(query.toString());
         return query.toString();
     }
 
