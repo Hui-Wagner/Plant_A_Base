@@ -3,11 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Main {
 
@@ -120,6 +116,8 @@ public class Main {
                     selectedColumns.add("PBASIC.PID");
                     selectedColumns.add("PBASIC.PNames");
 
+                    boolean hasPDETAILEDJoin = false;
+
                     if (plantType > 0) selectedColumns.add("PKINDS.PKind");
 
                     if (plantMonth > 0) selectedColumns.add("PACTIVITIES.Planting");
@@ -132,20 +130,23 @@ public class Main {
 
                     if (PH > 0) {selectedColumns.add("PDETAILED.PH");}
 
-                    if (sunLevel > 0) selectedColumns.add("SUNLEVELS.SunLevel");
+                    if (sunLevel > 0) selectedColumns.add("SunLevels.SunLevel");
 
                     if (waterLevel > 0) selectedColumns.add("WLEVELS.WLevel");
 
 
-                    List<String> tables = new ArrayList<>(Arrays.asList("patrishy_db.PBASIC"));
-                    Map<String, String> joinConditions = new HashMap<>();
+                    List<String> tables = Arrays.asList("patrishy_db.PBASIC");
+                    Map<String, String> joinConditions = new LinkedHashMap<>();
+
                     Map<String, String> whereConditions = new HashMap<>();
 
+                    // PKinds table
                     if(plantType != 0) {
                         joinConditions.put("patrishy_db.PKINDS", "PBASIC.PKind_ID = PKINDS.PKind_ID");
                         whereConditions.put("PBASIC.PKind_ID", "'" + plantType + "'");
                     }
 
+                    // PActivities table
                     if (plantMonth != 0 || bloomMonth != 0 || harvestMonth != 0) {
                         joinConditions.put("patrishy_db.PACTIVITIES", "PBASIC.PID = PACTIVITIES.PID");
                         if (plantMonth > 0) whereConditions.put("PACTIVITIES.Planting", "'" + plantMonth + "'");
@@ -153,37 +154,42 @@ public class Main {
                         if (harvestMonth > 0) whereConditions.put("PACTIVITIES.Harvesting", "'" + harvestMonth + "'");
                     }
 
+                    // Skinds table
                     if (soilType != 0) {
                         joinConditions.put("patrishy_db.SKINDS", "PBASIC.Soil_ID = SKINDS.Soil_ID");
                         whereConditions.put("SKINDS.Soil_ID", "'" + soilType + "'");
                     }
 
-                    if (temp != 0) {
-                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
-                        int minTemp = 40 + (temp - 1) * 10;
-                        int maxTemp = 50 + (temp - 1) * 10;
-                        whereConditions.put("PDETAILED.Temperature", "BETWEEN " + minTemp + " AND " + maxTemp);
-                    }
 
-                    if (PH != 0) {
+
+                    // PDETAILED TABLE
+                    if (temp != 0 || PH != 0 || sunLevel != 0 || waterLevel != 0) {
                         joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
-                        double minPH = 5.0 + (PH - 1) * 0.5;
-                        double maxPH = 5.5 + (PH - 1) * 0.5;
-                        whereConditions.put("PDETAILED.PH", "BETWEEN " + minPH + " AND " + maxPH);
+
+                        if (temp > 0) {
+                            int minTemp = 40 + (temp - 1) * 10;
+                            int maxTemp = 50 + (temp - 1) * 10;
+                            whereConditions.put("PDETAILED.Temperature", "BETWEEN " + minTemp + " AND " + maxTemp);
+                        }
+
+                        if (PH > 0) {
+                            double minPH = 5.0 + (PH - 1) * 0.5;
+                            double maxPH = 5.5 + (PH - 1) * 0.5;
+                            whereConditions.put("PDETAILED.PH", "BETWEEN " + minPH + " AND " + maxPH);
+                        }
                     }
 
                     if (sunLevel != 0) {
-                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
                         joinConditions.put("patrishy_db.SUNLEVELS", "PDETAILED.SunLevel_ID = SUNLEVELS.SunLevel_ID");
                         whereConditions.put("SUNLEVELS.SunLevel_ID", "'" + sunLevel + "'");
                     }
 
                     if (waterLevel != 0) {
-                        joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
                         joinConditions.put("patrishy_db.WLEVELS", "PDETAILED.WLevel_ID = WLEVELS.WLevel_ID");
-                        whereConditions.put("SUNLEVELS.SunLevel_ID", "'" + sunLevel + "'");
-
+                        whereConditions.put("WLEVELS.WLevel_ID", "'" + waterLevel + "'");
                     }
+
+
 
                     String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
                     txtResults.setText(results);
