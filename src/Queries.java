@@ -107,6 +107,44 @@ public class Queries {
         }
         return resultString.toString();
     }
+    public static InfiniteTable executeQueryOO(Connection conn, List<String> selectedColumns, List<String> tables,
+                                      Map<String, String> joinConditions,
+                                      Map<String, String> whereConditions) throws SQLException {
+        String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
+        InfiniteTable outTable = new InfiniteTable();
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet results = stmt.executeQuery(query);
+            ResultSetMetaData metadata = results.getMetaData();
+            int columnCount = metadata.getColumnCount();
+
+            // Print column names
+            ArrayList<String> columnNames = new ArrayList<>();
+                for (int i = 1; i <= columnCount; i++) {
+                String columnName = metadata.getColumnName(i);
+                columnNames.add(columnName);
+//                resultString.append(columnName).append("\t");
+            }
+                outTable.replaceColumnNames(columnNames);
+//            resultString.append("\n");
+
+            // Print rows
+
+            while (results.next()) {
+                String[] currentRow = new String[columnNames.size()];
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    currentRow[i - 1] = columnValue;
+//                    System.out.print(columnValue + " ");
+//                    resultString.append(columnValue).append("\t");
+                }
+                outTable.addRow(currentRow);
+//                resultString.append("\n");
+            }
+        }
+
+        System.out.println("Table should be here...");
+        return outTable;
+    }
 }
 
 

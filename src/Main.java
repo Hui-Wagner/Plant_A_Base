@@ -9,93 +9,104 @@ import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
+    private static final String[] LIST_MONTHS = new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    private static final String[] LIST_PLANT_TYPES = new String[]{"None","Trees", "Flowers", "Bushes", "Fruit", "Vegetables", "Succulent", "Vines"};
+    private static final String[] LIST_SOIL_TYPES = new String[]{"None", "Loamy", "Sandy", "Silty", "Peaty", "Chalky", "Clay"};
+    private static final String[] LIST_TEMP = new String[]{"None", "40F ~ 50F", "50F ~ 60F", "60F ~ 70F", "70F ~ 80F"};
+    private static final String[] LIST_PH = new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"};
+    private static final String[] LIST_SUN_LEVEL = new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"};
+    private static final String[] LIST_WATER_LEVEL = new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"};
 
+    private JButton submitButton = new JButton("submit");
+    private JTable displayTable;
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    Main() {
         // Set up Java Swing GUI
         JFrame frame = new JFrame("Planting A Base");
-        frame.setSize(900, 550);
+        frame.setSize(700, 550);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel TopPanel = new JPanel();
-        TopPanel.setPreferredSize(new Dimension(145, 550));
-        frame.add(TopPanel,BorderLayout.WEST);
-        JPanel CenterPanel = new JPanel();
-
-        frame.add(CenterPanel, BorderLayout.CENTER);
+        JPanel leftPanel = new JPanel();
+        leftPanel.setPreferredSize(new Dimension(145, 550));
+        frame.add(leftPanel,BorderLayout.WEST);
+        JPanel centerPanel = new JPanel();
+        centerPanel.setPreferredSize(new Dimension(650,550));
+        frame.add(centerPanel, BorderLayout.CENTER);
 
         // Add Plant Type label and Plant Type drop-down option on GUI
-        JLabel labelPlantType = new JLabel("Plant Type:");
-        TopPanel.add(labelPlantType);
-
-        JComboBox<String> plantingType = new JComboBox<>(new String[]{"None","Trees", "Flowers", "Bushes", "Fruit", "Vegetables", "Succulent", "Vines"});
-        TopPanel.add(plantingType);
+        JPanel plantTypePanel = new JPanel(new BorderLayout());
+        JLabel labelPlantType = new JLabel();
+        JComboBox<String> plantingType = new JComboBox<>(LIST_PLANT_TYPES);
+        addLabelDropDown(plantTypePanel, "Plant Type:", plantingType);
+        leftPanel.add(plantTypePanel);
 
         // Add Plant Month label and Plant Month drop-down option on GUI
-        JLabel labelPlantMonth = new JLabel("Planting Month:");
-        TopPanel.add(labelPlantMonth);
+        JPanel plantMonthPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantingMonth = new JComboBox<>(LIST_MONTHS);
 
-        JComboBox<String> plantingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        TopPanel.add(plantingMonth);
+        addLabelDropDown(plantMonthPanel, "Planting Month:", plantingMonth);
+        leftPanel.add(plantMonthPanel);
 
         // Add Blooming Month label and Blooming Month drop-down option on GUI
-        JLabel labelBloomMonth = new JLabel("Blooming Month:");
-        TopPanel.add(labelBloomMonth);
 
-        JComboBox<String> bloomingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        TopPanel.add(bloomingMonth);
+        JPanel bloomMonthPanel = new JPanel(new BorderLayout());
+        JComboBox<String> bloomingMonth = new JComboBox<>(LIST_MONTHS);
+        addLabelDropDown(bloomMonthPanel,"Blooming Month:",bloomingMonth);
+        leftPanel.add(bloomMonthPanel);
 
         // Add Harvesting Month label and Harvesting Month drop-down option on GUI
-        JLabel labelHarvestMonth = new JLabel("Harvesting Month:");
-        TopPanel.add(labelHarvestMonth);
-
-        JComboBox<String> harvestingMonth = new JComboBox<>(new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"});
-        TopPanel.add(harvestingMonth);
+        JPanel harvestingMonthPanel = new JPanel(new BorderLayout());
+        JComboBox<String> harvestingMonth = new JComboBox<>(LIST_MONTHS);
+        addLabelDropDown(harvestingMonthPanel,"Harvesting Month:",harvestingMonth);
+        leftPanel.add(harvestingMonthPanel);
 
         // Add Soil Type label and Soil Type drop-down option on GUI
-        JLabel labelSoilType = new JLabel("Soil Type:");
-        TopPanel.add(labelSoilType);
-
-        JComboBox<String> plantSoilType = new JComboBox<>(new String[]{"None", "Loamy", "Sandy", "Silty", "Peaty", "Chalky", "Clay"});
-        TopPanel.add(plantSoilType);
+        JPanel plantSoilPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantSoilType = new JComboBox<>(LIST_SOIL_TYPES);
+        addLabelDropDown(plantSoilPanel,"Soil Type:",plantSoilType);
+        leftPanel.add(plantSoilPanel);
 
         // Add Plant Temperature label and Plant Temperature drop-down option on GUI
-        JLabel labelPlantTemp = new JLabel("Temperature:");
-        TopPanel.add(labelPlantTemp);
-
-        JComboBox<String> plantTemp = new JComboBox<>(new String[]{"None", "40F ~ 50F", "50F ~ 60F", "60F ~ 70F", "70F ~ 80F"});
-        TopPanel.add(plantTemp);
+        JPanel plantTempPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantTemp = new JComboBox<>(LIST_TEMP);
+        addLabelDropDown(plantTempPanel, "Temperature:",plantTemp);
+        leftPanel.add(plantTempPanel);
 
         // Add Plant PH label and Plant PH drop-down option on GUI
-        JLabel labelPlantPH = new JLabel("PH Value:");
-        TopPanel.add(labelPlantPH);
-
-        JComboBox<String> plantPH = new JComboBox<>(new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"});
-        TopPanel.add(plantPH);
+        JPanel plantPHPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantPH = new JComboBox<>(LIST_PH);
+        addLabelDropDown(plantPHPanel, "PH Value:", plantPH);
+        leftPanel.add(plantPHPanel);
 
         //Add Sun Level label and Sun Level drop-down option on GUI
-        JLabel labelSunLevel = new JLabel("Sun Level:");
-        TopPanel.add(labelSunLevel);
-
-        JComboBox<String> plantSunLevel = new JComboBox<>(new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"});
-        TopPanel.add(plantSunLevel);
+        JPanel plantSunLevelPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantSunLevel = new JComboBox<>(LIST_SUN_LEVEL);
+        addLabelDropDown(plantSunLevelPanel, "Sun Level:", plantSunLevel);
+        leftPanel.add(plantSunLevelPanel);
 
         //Add Water Level label and Water Level drop-down option on GUI
-        JLabel labelWaterLevel = new JLabel("Water Level:");
-        TopPanel.add(labelWaterLevel);
-
-        JComboBox<String> plantWaterLevel = new JComboBox<>(new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"});
-        TopPanel.add(plantWaterLevel);
+        JPanel plantWaterLevelPanel = new JPanel(new BorderLayout());
+        JComboBox<String> plantWaterLevel = new JComboBox<>(LIST_WATER_LEVEL);
+        addLabelDropDown(plantWaterLevelPanel, "Water Level:", plantWaterLevel);
+        leftPanel.add(plantWaterLevelPanel);
 
         // Add Submit Button on GUI
+        JPanel btnPanel = new JPanel(new BorderLayout());
         JButton btnSubmit = new JButton("Submit");
-        TopPanel.add(btnSubmit);
+        btnPanel.add(btnSubmit);
+        btnPanel.setPreferredSize(new Dimension(110,20));
+        leftPanel.add(btnPanel);
 
         // Set Text Area for displaying the data that returns from database
         JTextArea txtResults = new JTextArea(30, 50);
         txtResults.setEditable(false);
-        JScrollPane scrollResults = new JScrollPane(txtResults);
-        CenterPanel.add(scrollResults);
+        displayTable = new JTable();
+        JScrollPane scrollResults = new JScrollPane(displayTable);
+        centerPanel.add(scrollResults);
 
         btnSubmit.addActionListener(new ActionListener() {
             @Override
@@ -111,8 +122,6 @@ public class Main {
                 int PH =plantPH.getSelectedIndex();
                 int sunLevel = plantSunLevel.getSelectedIndex();
                 int waterLevel = plantWaterLevel.getSelectedIndex();
-
-
 
                 //Connect to the database and building up the query by user's demand
                 try (Connection conn = ConnectDB.connect()) {
@@ -197,20 +206,31 @@ public class Main {
                         whereConditions.put("WLEVELS.WLevel_ID", "'" + waterLevel + "'");
                     }
 
-
-
-                    String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
-                    txtResults.setText(results);
+//                    String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
+                    InfiniteTable theTable = Queries.executeQueryOO(conn, selectedColumns, tables, joinConditions, whereConditions);
+//                    displayTable = new JTable(theTable.getRows(), theTable.getColumnNames());
+                    displayTable.setModel(theTable.getModel());
+                    scrollResults.repaint();
+                    scrollResults.revalidate();
+//                    scrollResults = new JScrollPane(displayTable);
+//                    txtResults.setText(results);
 
                 } catch (SQLException ex) {
                     ex.printStackTrace();
-                    txtResults.setText("Failed to connect to the database.");
+//                    txtResults.setText("Failed to connect to the database.");
                 }
             }
         });
+        frame.pack();
         frame.setVisible(true);
     }
 
+    private static void addLabelDropDown(JPanel jPanel, String label, JComboBox jComboBox) {
+        JLabel label1 = new JLabel(label);
+        jPanel.add(label1, BorderLayout.NORTH);
+        jComboBox.setPreferredSize(new Dimension(110,20));
+        jPanel.add(jComboBox, BorderLayout.CENTER);
+    }
     //adjust column width to longest char length + 4
     //font size, font type
     //remove resizeable
