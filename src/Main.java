@@ -31,7 +31,7 @@ public class Main {
         frame.setSize(700, 550);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ImageIcon logo = new ImageIcon("/Plant_A_Base/src/Icon.png");
+        ImageIcon logo = new ImageIcon("other/Icon.png");
         frame.setIconImage(logo.getImage());
 
         JPanel leftPanel = new JPanel();
