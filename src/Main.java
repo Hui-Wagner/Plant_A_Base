@@ -28,17 +28,17 @@ public class Main {
     Main() {
         // Set up Java Swing GUI
         frame = new JFrame("Planting A Base");
-        frame.setSize(700, 550);
+        frame.setSize(1200, 500);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ImageIcon logo = new ImageIcon("/Plant_A_Base/src/Icon.png");
+        ImageIcon logo = new ImageIcon("other/icon.png");
         frame.setIconImage(logo.getImage());
 
         JPanel leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(145, 550));
+        leftPanel.setPreferredSize(new Dimension(145, 500));
         frame.add(leftPanel,BorderLayout.WEST);
         JPanel centerPanel = new JPanel();
-        centerPanel.setPreferredSize(new Dimension(650,550));
+//        centerPanel.setPreferredSize(new Dimension(700,550));
         frame.add(centerPanel, BorderLayout.CENTER);
 
         // Add Plant Type label and Plant Type drop-down option on GUI
@@ -105,9 +105,7 @@ public class Main {
         btnPanel.setPreferredSize(new Dimension(110,20));
         leftPanel.add(btnPanel);
 
-        // Set Text Area for displaying the data that returns from database
-        JTextArea txtResults = new JTextArea(30, 50);
-        txtResults.setEditable(false);
+        // Set Display Table for displaying the data that returns from database
         displayTable = new JTable();
         JScrollPane scrollResults = new JScrollPane(displayTable);
         centerPanel.add(scrollResults);
