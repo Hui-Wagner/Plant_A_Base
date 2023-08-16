@@ -18,7 +18,7 @@ public class Main {
     private static final String[] LIST_WATER_LEVEL = new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"};
 
     private JFrame frame;
-    private JButton submitButton = new JButton("submit");
+    private JButton submitButton = new JButton("Submit");
     private JTable displayTable;
 
     public static void main(String[] args) {
@@ -36,7 +36,8 @@ public class Main {
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(300, 400));
-//        leftPanel.setBackground(Color.DARK_GRAY);
+
+        // leftPanel.setBackground(Color.DARK_GRAY);
 
         ImageIcon logo = new ImageIcon("other/logo.png");
         Image logoResized = logo.getImage().getScaledInstance(300,146, Image.SCALE_SMOOTH);
@@ -111,7 +112,8 @@ public class Main {
         // Add Submit Button on GUI
         JPanel btnPanel = new JPanel(new BorderLayout());
         JButton btnSubmit = new JButton("Submit");
-//        btnSubmit.setSize(new Dimension(280,40));
+
+        //btnSubmit.setSize(new Dimension(280,40));
         btnPanel.add(btnSubmit);
         btnPanel.setSize(new Dimension(140,40));
         leftPanel.add(btnPanel);
@@ -146,37 +148,34 @@ public class Main {
                     selectedColumns.add("PBASIC.PID");
                     selectedColumns.add("PBASIC.PNames");
 
-                    boolean hasPDETAILEDJoin = false;
-
+                    // If plant type is chosen, add the column statement into the query
                     if (plantType > 0) selectedColumns.add("PKINDS.PKind");
 
+                    // If planting month, blooming month, or harvesting month  is chosen, add the column statement into the query
                     if (plantMonth > 0) selectedColumns.add("PACTIVITIES.Planting");
                     if (bloomMonth > 0) selectedColumns.add("PACTIVITIES.Blooming");
                     if (harvestMonth > 0) selectedColumns.add("PACTIVITIES.Harvesting");
 
+                    // If soil type, temp, PH, sunLevel, or waterLevel is chosen, add the column statement into the query
                     if (soilType > 0) {selectedColumns.add("SKINDS.Soil_Type"); selectedColumns.add("SKINDS.Soil_Description");}
-
                     if (temp > 0) {selectedColumns.add("PDETAILED.Temperature");}
-
                     if (PH > 0) {selectedColumns.add("PDETAILED.PH");}
-
                     if (sunLevel > 0) selectedColumns.add("SunLevels.SunLevel");
-
                     if (waterLevel > 0) selectedColumns.add("WLEVELS.WLevel");
 
-
+                    // Add table PBASIC
                     List<String> tables = Arrays.asList("patrishy_db.PBASIC");
                     Map<String, String> joinConditions = new LinkedHashMap<>();
 
                     Map<String, String> whereConditions = new HashMap<>();
 
-                    // PKinds table
+                    // Combine PKinds table with PBASIC table and add join statement into the query
                     if(plantType != 0) {
                         joinConditions.put("patrishy_db.PKINDS", "PBASIC.PKind_ID = PKINDS.PKind_ID");
                         whereConditions.put("PBASIC.PKind_ID", "'" + plantType + "'");
                     }
 
-                    // PActivities table
+                    // Combine PActivities table with PBASIC table and add join statement into the query
                     if (plantMonth != 0 || bloomMonth != 0 || harvestMonth != 0) {
                         joinConditions.put("patrishy_db.PACTIVITIES", "PBASIC.PID = PACTIVITIES.PID");
                         if (plantMonth > 0) whereConditions.put("PACTIVITIES.Planting", "'" + plantMonth + "'");
@@ -184,7 +183,7 @@ public class Main {
                         if (harvestMonth > 0) whereConditions.put("PACTIVITIES.Harvesting", "'" + harvestMonth + "'");
                     }
 
-                    // Skinds table
+                    // // Combine SKINDS table with PBASIC table and add join statement into the query
                     if (soilType != 0) {
                         joinConditions.put("patrishy_db.SKINDS", "PBASIC.Soil_ID = SKINDS.Soil_ID");
                         whereConditions.put("SKINDS.Soil_ID", "'" + soilType + "'");
@@ -192,16 +191,18 @@ public class Main {
 
 
 
-                    // PDETAILED TABLE
+                    // Combine PDETAILED TABLE with PBASIC table and add join statement into the query
                     if (temp != 0 || PH != 0 || sunLevel != 0 || waterLevel != 0) {
                         joinConditions.put("patrishy_db.PDETAILED", "PBASIC.PID = PDETAILED.PID");
 
+                        // Convert the selection number from drop-down menu to min and max temperature to define the range and add into query
                         if (temp > 0) {
                             int minTemp = 40 + (temp - 1) * 10;
                             int maxTemp = 50 + (temp - 1) * 10;
                             whereConditions.put("PDETAILED.Temperature", "BETWEEN " + minTemp + " AND " + maxTemp);
                         }
 
+                        // Convert the selection number from drop-down menu to min and max PH value to define the range and add into query
                         if (PH > 0) {
                             double minPH = 5.0 + (PH - 1) * 0.5;
                             double maxPH = 5.5 + (PH - 1) * 0.5;
@@ -209,11 +210,13 @@ public class Main {
                         }
                     }
 
+                    // Combine SUNLEVELS TABLE with PBASIC table and add join statement into the query
                     if (sunLevel != 0) {
                         joinConditions.put("patrishy_db.SUNLEVELS", "PDETAILED.SunLevel_ID = SUNLEVELS.SunLevel_ID");
                         whereConditions.put("SUNLEVELS.SunLevel_ID", "'" + sunLevel + "'");
                     }
 
+                    // Combine WLEVELS TABLE with PBASIC table and add join statement into the query
                     if (waterLevel != 0) {
                         joinConditions.put("patrishy_db.WLEVELS", "PDETAILED.WLevel_ID = WLEVELS.WLevel_ID");
                         whereConditions.put("WLEVELS.WLevel_ID", "'" + waterLevel + "'");
