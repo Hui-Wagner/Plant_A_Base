@@ -222,7 +222,7 @@ public class Main {
                         whereConditions.put("WLEVELS.WLevel_ID", "'" + waterLevel + "'");
                     }
 
-                    InfiniteTable theTable = Queries.executeQueryOO(conn, selectedColumns, tables, joinConditions, whereConditions);
+                    InfiniteTable theTable = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
                     displayTable.setModel(theTable.getModel());
                     scrollResults.repaint();
                     scrollResults.revalidate();
@@ -236,6 +236,12 @@ public class Main {
         frame.setVisible(true);
     }
 
+    /**
+     * Does the repetitive action for each drop down menu
+     * @param jPanel the panel to be added to
+     * @param label the label for the dropDown jComboBox
+     * @param jComboBox the dropDown menu
+     */
     private static void addLabelDropDown(JPanel jPanel, String label, JComboBox jComboBox) {
         JLabel label1 = new JLabel(label);
         jPanel.add(label1, BorderLayout.NORTH);

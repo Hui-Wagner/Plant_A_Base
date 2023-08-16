@@ -70,38 +70,19 @@ public class Queries {
         return query.toString();
     }
 
-
-    public static String executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
-                                      Map<String, String> joinConditions,
-                                      Map<String, String> whereConditions) throws SQLException {
-        String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
-        StringBuilder resultString = new StringBuilder();
-        try (Statement stmt = conn.createStatement()) {
-            ResultSet results = stmt.executeQuery(query);
-            ResultSetMetaData metadata = results.getMetaData();
-            int columnCount = metadata.getColumnCount();
-
-            // Print column names
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metadata.getColumnName(i);
-                resultString.append(columnName).append("\t");
-            }
-            resultString.append("\n");
-
-            // Print rows
-            while (results.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnValue = results.getString(i);
-                    resultString.append(columnValue).append("\t");
-                }
-                resultString.append("\n");
-            }
-        }
-        return resultString.toString();
-    }
-    public static InfiniteTable executeQueryOO(Connection conn, List<String> selectedColumns, List<String> tables,
-                                      Map<String, String> joinConditions,
-                                      Map<String, String> whereConditions) throws SQLException {
+    /**
+     *
+     * @param conn
+     * @param selectedColumns
+     * @param tables
+     * @param joinConditions
+     * @param whereConditions
+     * @return InfiniteTable object, used to add new data to DefaultTableModel
+     * @throws SQLException
+     */
+    public static InfiniteTable executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
+                                             Map<String, String> joinConditions,
+                                             Map<String, String> whereConditions) throws SQLException {
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
         InfiniteTable outTable = new InfiniteTable();
         try (Statement stmt = conn.createStatement()) {
@@ -114,10 +95,8 @@ public class Queries {
                 for (int i = 1; i <= columnCount; i++) {
                 String columnName = metadata.getColumnName(i);
                 columnNames.add(columnName);
-//                resultString.append(columnName).append("\t");
             }
                 outTable.replaceColumnNames(columnNames);
-//            resultString.append("\n");
 
             // Print rows
 
@@ -126,15 +105,11 @@ public class Queries {
                 for (int i = 1; i <= columnCount; i++) {
                     String columnValue = results.getString(i);
                     currentRow[i - 1] = columnValue;
-//                    System.out.print(columnValue + " ");
-//                    resultString.append(columnValue).append("\t");
                 }
                 outTable.addRow(currentRow);
-//                resultString.append("\n");
             }
         }
 
-        System.out.println("Table should be here...");
         return outTable;
     }
 }
