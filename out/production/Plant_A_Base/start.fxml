@@ -12,7 +12,7 @@
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1"> <!--fx:controller="TableController"> -->
    <children>
       <Button layoutX="534.0" layoutY="32.0" mnemonicParsing="false" onAction="#submitQuery" text="Search" />
-      <TableView fx:id="PBasic" layoutX="16.0" layoutY="66.0" prefHeight="319.0" prefWidth="411.0">
+      <TableView fx:id="tableView" layoutX="16.0" layoutY="66.0" prefHeight="319.0" prefWidth="411.0">
         <columns>
           <TableColumn fx:id="column1" prefWidth="229.60003662109375" text="Name" />
           <TableColumn fx:id="column2" prefWidth="87.199951171875" text="Month" />
@@ -22,7 +22,7 @@
       </TableView>
       <TextField layoutX="371.0" layoutY="31.0" />
       <Text layoutX="371.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="still testing" />
-      <Text layoutX="25.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="PBasic" />
+      <Text layoutX="25.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TableView" />
       <ChoiceBox fx:id="myPlantTypeChoiceBox" layoutX="435.0" layoutY="84.0" prefWidth="150.0" />
       <Label layoutX="435.0" layoutY="66.0" text="Plant Type" />
       <ChoiceBox fx:id="myMonthChoiceBox" layoutX="435.0" layoutY="134.0" prefWidth="150.0" />

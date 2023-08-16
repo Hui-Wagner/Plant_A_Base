@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -66,55 +65,87 @@ public class Queries {
             query.append(" WHERE ");
             List<String> conditions = new ArrayList<>();
             for (Map.Entry<String, String> entry : whereConditions.entrySet()) {
-                conditions.add(entry.getKey() + " = " + entry.getValue());
+                if (entry.getValue().contains("BETWEEN")) {
+                    conditions.add(entry.getKey() + " " + entry.getValue());
+                } else {
+                    conditions.add(entry.getKey() + " = " + entry.getValue());
+                }
             }
             query.append(String.join(" AND ", conditions));
         }
 
+        System.out.println(query.toString());
         return query.toString();
     }
 
 
-    public static PTables executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
-                                              Map<String, String> joinConditions,
-                                              Map<String, String> whereConditions) throws SQLException {
+    public static String executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
+                                      Map<String, String> joinConditions,
+                                      Map<String, String> whereConditions) throws SQLException {
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
-        System.out.println("Executing query: " + query);
+        StringBuilder resultString = new StringBuilder();
         try (Statement stmt = conn.createStatement()) {
             ResultSet results = stmt.executeQuery(query);
+            ResultSetMetaData metadata = results.getMetaData();
+            int columnCount = metadata.getColumnCount();
 
             // Print column names
-            System.out.println(String.join("\t", selectedColumns));
-
-            //retrieve column names for PTables
-            Object[] objArrColumns =  selectedColumns.toArray();
-            String[] columnNames = Arrays.copyOf(objArrColumns, objArrColumns.length, String[].class);
-
-            //build rows for Ptables
-            int i = 0;
-            List<String[]> rows = new ArrayList<>();
-            //handling null pointer
-
-            // Print and gather rows
-            while (results.next()) {
-                String[] row = new String[columnNames.length];
-
-                for (String column : selectedColumns) {
-                    String cell = results.getString(column);
-                    System.out.print(cell + "\t");
-                    row[i++] = cell;
-                }
-                rows.add(row);
-                i = 0;
-                System.out.println();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metadata.getColumnName(i);
+                resultString.append(columnName).append("\t");
             }
+            resultString.append("\n");
 
-            return new PTables(columnNames,rows);
+            // Print rows
+            while (results.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    resultString.append(columnValue).append("\t");
+                }
+                resultString.append("\n");
+            }
         }
+        return resultString.toString();
     }
+    public static InfiniteTable executeQueryOO(Connection conn, List<String> selectedColumns, List<String> tables,
+                                      Map<String, String> joinConditions,
+                                      Map<String, String> whereConditions) throws SQLException {
+        String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
+        InfiniteTable outTable = new InfiniteTable();
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet results = stmt.executeQuery(query);
+            ResultSetMetaData metadata = results.getMetaData();
+            int columnCount = metadata.getColumnCount();
 
+            // Print column names
+            ArrayList<String> columnNames = new ArrayList<>();
+                for (int i = 1; i <= columnCount; i++) {
+                String columnName = metadata.getColumnName(i);
+                columnNames.add(columnName);
+//                resultString.append(columnName).append("\t");
+            }
+                outTable.replaceColumnNames(columnNames);
+//            resultString.append("\n");
 
+            // Print rows
+
+            while (results.next()) {
+                String[] currentRow = new String[columnNames.size()];
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    currentRow[i - 1] = columnValue;
+//                    System.out.print(columnValue + " ");
+//                    resultString.append(columnValue).append("\t");
+                }
+                outTable.addRow(currentRow);
+//                resultString.append("\n");
+            }
+        }
+
+        System.out.println("Table should be here...");
+        return outTable;
     }
+}
 
 
 
