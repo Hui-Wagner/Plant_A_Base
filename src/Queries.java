@@ -3,8 +3,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Queries class provides utility methods for executing and building SQL queries.
+ */
 public class Queries {
 
+    /**
+     * Fetches and prints all records from the PBASIC table in the patrishy_db database.
+     *
+     * @param conn The database connection object.
+     * @throws SQLException if there's an error during the SQL operation.
+     */
     public static void getPBASIC(Connection conn) throws SQLException {
         String query = "SELECT * FROM patrishy_db.PBASIC";
         try (Statement stmt = conn.createStatement()) {
@@ -30,6 +39,15 @@ public class Queries {
         }
     }
 
+    /**
+     * Builds a SQL query string based on the provided parameters.
+     *
+     * @param selectedColumns The columns to be selected in the query.
+     * @param tables The tables to be queried.
+     * @param joinConditions The join conditions for the tables.
+     * @param whereConditions The conditions for the WHERE clause.
+     * @return The constructed SQL query string.
+     */
     public static String buildQuery(List<String> selectedColumns, List<String> tables,
                                     Map<String, String> joinConditions,
                                     Map<String, String> whereConditions) {
@@ -71,14 +89,15 @@ public class Queries {
     }
 
     /**
+     * Executes a SQL query based on the provided parameters and returns the result as an InfiniteTable object.
      *
-     * @param conn
-     * @param selectedColumns
-     * @param tables
-     * @param joinConditions
-     * @param whereConditions
-     * @return InfiniteTable object, used to add new data to DefaultTableModel
-     * @throws SQLException
+     * @param conn The database connection object.
+     * @param selectedColumns The columns to be selected in the query.
+     * @param tables The tables to be queried.
+     * @param joinConditions The join conditions for the tables.
+     * @param whereConditions The conditions for the WHERE clause.
+     * @return An InfiniteTable object containing the result of the query.
+     * @throws SQLException if there's an error during the SQL operation.
      */
     public static InfiniteTable executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
                                              Map<String, String> joinConditions,
@@ -90,16 +109,15 @@ public class Queries {
             ResultSetMetaData metadata = results.getMetaData();
             int columnCount = metadata.getColumnCount();
 
-            // Print column names
+            // Collect column names
             ArrayList<String> columnNames = new ArrayList<>();
-                for (int i = 1; i <= columnCount; i++) {
+            for (int i = 1; i <= columnCount; i++) {
                 String columnName = metadata.getColumnName(i);
                 columnNames.add(columnName);
             }
-                outTable.replaceColumnNames(columnNames);
+            outTable.replaceColumnNames(columnNames);
 
-            // Print rows
-
+            // Collect rows
             while (results.next()) {
                 String[] currentRow = new String[columnNames.size()];
                 for (int i = 1; i <= columnCount; i++) {
@@ -113,6 +131,7 @@ public class Queries {
         return outTable;
     }
 }
+
 
 
 
