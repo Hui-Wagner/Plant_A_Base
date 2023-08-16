@@ -36,7 +36,7 @@ public class Main {
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(300, 400));
-        leftPanel.setBackground(Color.DARK_GRAY);
+//        leftPanel.setBackground(Color.DARK_GRAY);
 
         ImageIcon logo = new ImageIcon("other/logo.png");
         Image logoResized = logo.getImage().getScaledInstance(300,146, Image.SCALE_SMOOTH);
@@ -48,7 +48,7 @@ public class Main {
         frame.add(leftPanel,BorderLayout.WEST);
         JPanel centerPanel = new JPanel();
 //        centerPanel.setPreferredSize(new Dimension(700,550));
-        centerPanel.setBackground(Color.DARK_GRAY);
+//        centerPanel.setBackground(Color.DARK_GRAY);
         frame.add(centerPanel, BorderLayout.CENTER);
 
         // Add Plant Type label and Plant Type drop-down option on GUI
