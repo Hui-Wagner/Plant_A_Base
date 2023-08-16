@@ -17,18 +17,22 @@ public class Main {
     private static final String[] LIST_SUN_LEVEL = new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"};
     private static final String[] LIST_WATER_LEVEL = new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"};
 
+    private JFrame frame;
     private JButton submitButton = new JButton("submit");
     private JTable displayTable;
+
     public static void main(String[] args) {
         new Main();
     }
 
     Main() {
         // Set up Java Swing GUI
-        JFrame frame = new JFrame("Planting A Base");
+        frame = new JFrame("Planting A Base");
         frame.setSize(700, 550);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        ImageIcon logo = new ImageIcon("\Plant_A_Base\\src\\Logo.png");
+        frame.setIconImage(logo.getImage());
 
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(145, 550));
@@ -206,18 +210,13 @@ public class Main {
                         whereConditions.put("WLEVELS.WLevel_ID", "'" + waterLevel + "'");
                     }
 
-//                    String results = Queries.executeQuery(conn, selectedColumns, tables, joinConditions, whereConditions);
                     InfiniteTable theTable = Queries.executeQueryOO(conn, selectedColumns, tables, joinConditions, whereConditions);
-//                    displayTable = new JTable(theTable.getRows(), theTable.getColumnNames());
                     displayTable.setModel(theTable.getModel());
                     scrollResults.repaint();
                     scrollResults.revalidate();
-//                    scrollResults = new JScrollPane(displayTable);
-//                    txtResults.setText(results);
 
                 } catch (SQLException ex) {
                     ex.printStackTrace();
-//                    txtResults.setText("Failed to connect to the database.");
                 }
             }
         });
