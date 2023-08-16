@@ -30,6 +30,8 @@ public class InfiniteTable {
     }
 
     public Object[][] getRows() {
+        if(rows.size() == 0) return new String[][]{{"No Values Found"}};
+
         Object[][] objectRows = new Object[rows.size()][rows.get(0).length];
         for (int i = 0; i < rows.size(); i++) {
             String[] currentRow = rows.get(i);
