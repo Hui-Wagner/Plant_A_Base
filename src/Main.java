@@ -28,17 +28,27 @@ public class Main {
     Main() {
         // Set up Java Swing GUI
         frame = new JFrame("Planting A Base");
-        frame.setSize(1200, 500);
+        frame.setSize(1500, 500);
         frame.setLayout(new BorderLayout());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        ImageIcon logo = new ImageIcon("other/icon.png");
-        frame.setIconImage(logo.getImage());
+        ImageIcon icon = new ImageIcon("other/icon.png");
+        frame.setIconImage(icon.getImage());
 
         JPanel leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(145, 500));
+        leftPanel.setPreferredSize(new Dimension(300, 400));
+        leftPanel.setBackground(Color.DARK_GRAY);
+
+        ImageIcon logo = new ImageIcon("other/logo.png");
+        Image logoResized = logo.getImage().getScaledInstance(300,146, Image.SCALE_SMOOTH);
+        logo = new ImageIcon(logoResized);
+        JLabel logoLabel = new JLabel();
+        logoLabel.setIcon(logo);
+        leftPanel.add(logoLabel);
+
         frame.add(leftPanel,BorderLayout.WEST);
         JPanel centerPanel = new JPanel();
 //        centerPanel.setPreferredSize(new Dimension(700,550));
+        centerPanel.setBackground(Color.DARK_GRAY);
         frame.add(centerPanel, BorderLayout.CENTER);
 
         // Add Plant Type label and Plant Type drop-down option on GUI
@@ -101,8 +111,9 @@ public class Main {
         // Add Submit Button on GUI
         JPanel btnPanel = new JPanel(new BorderLayout());
         JButton btnSubmit = new JButton("Submit");
+//        btnSubmit.setSize(new Dimension(280,40));
         btnPanel.add(btnSubmit);
-        btnPanel.setPreferredSize(new Dimension(110,20));
+        btnPanel.setSize(new Dimension(140,40));
         leftPanel.add(btnPanel);
 
         // Set Display Table for displaying the data that returns from database
@@ -225,7 +236,7 @@ public class Main {
     private static void addLabelDropDown(JPanel jPanel, String label, JComboBox jComboBox) {
         JLabel label1 = new JLabel(label);
         jPanel.add(label1, BorderLayout.NORTH);
-        jComboBox.setPreferredSize(new Dimension(110,20));
+        jComboBox.setPreferredSize(new Dimension(140,20));
         jPanel.add(jComboBox, BorderLayout.CENTER);
     }
     //adjust column width to longest char length + 4
