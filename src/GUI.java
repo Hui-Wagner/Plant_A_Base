@@ -35,7 +35,7 @@ public class GUI {
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(300, 400));
         leftPanel.add(setUpLogo());
-        ButtonsAndActions.makeDropDowns(leftPanel,this);
+        ButtonsAndDropDowns.makeDropDowns(leftPanel,this);
         return leftPanel;
     }
     private JLabel setUpLogo(){
