@@ -1,7 +1,5 @@
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class InfiniteTable {
