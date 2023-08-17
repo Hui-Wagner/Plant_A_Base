@@ -3,16 +3,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The Queries class provides utility methods for executing and building SQL queries.
+ */
 public class Queries {
 
-    // When user click the button, for example to choose planting season (in PActivities),
-    // generate the text by clicked the button, then use that text and saved into query string.
-
-    // Need a buildQuery method to build query each time by the user
-    // Need an executeQuery method to executeQuery
-
-    // Then later can be used to display on the interface
-
+    /**
+     * Fetches and prints all records from the PBASIC table in the patrishy_db database.
+     *
+     * @param conn The database connection object.
+     * @throws SQLException if there's an error during the SQL operation.
+     */
     public static void getPBASIC(Connection conn) throws SQLException {
         String query = "SELECT * FROM patrishy_db.PBASIC";
         try (Statement stmt = conn.createStatement()) {
@@ -38,6 +39,15 @@ public class Queries {
         }
     }
 
+    /**
+     * Builds a SQL query string based on the provided parameters.
+     *
+     * @param selectedColumns The columns to be selected in the query.
+     * @param tables The tables to be queried.
+     * @param joinConditions The join conditions for the tables.
+     * @param whereConditions The conditions for the WHERE clause.
+     * @return The constructed SQL query string.
+     */
     public static String buildQuery(List<String> selectedColumns, List<String> tables,
                                     Map<String, String> joinConditions,
                                     Map<String, String> whereConditions) {
@@ -78,9 +88,20 @@ public class Queries {
         return query.toString();
     }
 
+    /**
+     * Executes a SQL query based on the provided parameters and returns the result as an InfiniteTable object.
+     *
+     * @param conn The database connection object.
+     * @param selectedColumns The columns to be selected in the query.
+     * @param tables The tables to be queried.
+     * @param joinConditions The join conditions for the tables.
+     * @param whereConditions The conditions for the WHERE clause.
+     * @return An InfiniteTable object containing the result of the query.
+     * @throws SQLException if there's an error during the SQL operation.
+     */
     public static InfiniteTable executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
-                                      Map<String, String> joinConditions,
-                                      Map<String, String> whereConditions) throws SQLException {
+                                             Map<String, String> joinConditions,
+                                             Map<String, String> whereConditions) throws SQLException {
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
         InfiniteTable outTable = new InfiniteTable();
         try (Statement stmt = conn.createStatement()) {
@@ -88,35 +109,29 @@ public class Queries {
             ResultSetMetaData metadata = results.getMetaData();
             int columnCount = metadata.getColumnCount();
 
-            // Print column names
+            // Collect column names
             ArrayList<String> columnNames = new ArrayList<>();
-                for (int i = 1; i <= columnCount; i++) {
+            for (int i = 1; i <= columnCount; i++) {
                 String columnName = metadata.getColumnName(i);
                 columnNames.add(columnName);
-//                resultString.append(columnName).append("\t");
             }
-                outTable.replaceColumnNames(columnNames);
-//            resultString.append("\n");
+            outTable.replaceColumnNames(columnNames);
 
-            // Print rows
-
+            // Collect rows
             while (results.next()) {
                 String[] currentRow = new String[columnNames.size()];
                 for (int i = 1; i <= columnCount; i++) {
                     String columnValue = results.getString(i);
                     currentRow[i - 1] = columnValue;
-//                    System.out.print(columnValue + " ");
-//                    resultString.append(columnValue).append("\t");
                 }
                 outTable.addRow(currentRow);
-//                resultString.append("\n");
             }
         }
 
-        System.out.println("Table should be here...");
         return outTable;
     }
 }
+
 
 
 
