@@ -78,36 +78,7 @@ public class Queries {
         return query.toString();
     }
 
-
-    public static String executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
-                                      Map<String, String> joinConditions,
-                                      Map<String, String> whereConditions) throws SQLException {
-        String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
-        StringBuilder resultString = new StringBuilder();
-        try (Statement stmt = conn.createStatement()) {
-            ResultSet results = stmt.executeQuery(query);
-            ResultSetMetaData metadata = results.getMetaData();
-            int columnCount = metadata.getColumnCount();
-
-            // Print column names
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = metadata.getColumnName(i);
-                resultString.append(columnName).append("\t");
-            }
-            resultString.append("\n");
-
-            // Print rows
-            while (results.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnValue = results.getString(i);
-                    resultString.append(columnValue).append("\t");
-                }
-                resultString.append("\n");
-            }
-        }
-        return resultString.toString();
-    }
-    public static InfiniteTable executeQueryOO(Connection conn, List<String> selectedColumns, List<String> tables,
+    public static InfiniteTable executeQuery(Connection conn, List<String> selectedColumns, List<String> tables,
                                       Map<String, String> joinConditions,
                                       Map<String, String> whereConditions) throws SQLException {
         String query = buildQuery(selectedColumns, tables, joinConditions, whereConditions);
