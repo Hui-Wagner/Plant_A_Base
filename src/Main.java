@@ -21,11 +21,19 @@ public class Main {
     private JButton submitButton = new JButton("Submit");
     private JTable displayTable;
 
+    private static final String USERNAME = "PlantLover";
+    private static final String PASSWORD = "Washington";
+
     public static void main(String[] args) {
         new Main();
     }
 
     Main() {
+        // Show the login dialog
+        if (!loginDialog()) {
+            System.exit(0); // Close the application if login fails
+        }
+
         // Set up Java Swing GUI
         frame = new JFrame("Planting A Base");
         frame.setSize(1500, 500);
@@ -235,6 +243,50 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
+
+    private boolean loginDialog() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        // Load and display the logo
+        ImageIcon logoIcon = new ImageIcon("other/Logo.png"); // Adjust the path as needed
+        JLabel logoLabel = new JLabel(logoIcon);
+        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(logoLabel);
+        panel.add(Box.createRigidArea(new Dimension(0, 20))); // Add some spacing
+
+        // Create a sub-panel for login fields
+        JPanel loginPanel = new JPanel(new GridLayout(2, 2));
+        JTextField usernameField = new JTextField();
+        JPasswordField passwordField = new JPasswordField();
+
+        loginPanel.add(new JLabel("Username:"));
+        loginPanel.add(usernameField);
+        loginPanel.add(new JLabel("Password:"));
+        loginPanel.add(passwordField);
+
+        panel.add(loginPanel);
+
+        // Display JOptionPane without the logo icon argument
+        Object[] options = {"OK", "Cancel"};
+        int result = JOptionPane.showOptionDialog(null, panel, "Login", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (USERNAME.equals(usernameField.getText()) && PASSWORD.equals(new String(passwordField.getPassword()))) {
+                return true; // Successful login
+            } else {
+                JOptionPane.showMessageDialog(null, "Invalid credentials!", "Error", JOptionPane.ERROR_MESSAGE);
+                return false; // Failed login
+            }
+        } else {
+            return false; // Login dialog cancelled
+        }
+    }
+
+
+
+
+
 
     /**
      * Does the repetitive action for each drop down menu
