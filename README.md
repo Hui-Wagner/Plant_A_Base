@@ -14,7 +14,7 @@ In order to run the project, you need:
    
     Go to Intellij -> File -> Project Structure -> Libraries -> add library by clicking "+" -> find folder called " mysql-connector-j-8.1.0" on your computer -> choose "mysql-connector-j-8.1.0.jar"-> Apply -> Ok
 
-    Run the program from Main class
+    Run the program from Main
 
 # Development Platform Used
 
