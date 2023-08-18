@@ -249,7 +249,7 @@ public class Main {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
         // Load and display the logo
-        ImageIcon logoIcon = new ImageIcon("other/Logo.png"); // Adjust the path as needed
+        ImageIcon logoIcon = new ImageIcon("other/Logo.png");
         JLabel logoLabel = new JLabel(logoIcon);
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(logoLabel);
