@@ -3,12 +3,14 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
 public class GUI {
+    private static GUI instance;
     private JFrame frame;
     private JButton submitButton = new JButton("Submit");
     private JScrollPane scrollResults;
     private JTable displayTable;
     public GUI() {
         // Set up Java Swing GUI
+        instance = this;
         frame = setUpFrame();
         frame.add(setUpLeftPanel(),BorderLayout.WEST);
         frame.add(setUpCenterPanel(), BorderLayout.CENTER);
@@ -35,7 +37,7 @@ public class GUI {
         JPanel leftPanel = new JPanel();
         leftPanel.setPreferredSize(new Dimension(300, 400));
         leftPanel.add(setUpLogo());
-        ButtonsAndDropDowns.makeDropDowns(leftPanel,this);
+        ButtonsAndDropDowns.makeDropDowns(leftPanel);
         return leftPanel;
     }
     private JLabel setUpLogo(){
@@ -46,7 +48,12 @@ public class GUI {
         logoLabel.setIcon(logo);
         return logoLabel;
     }
-
+    public static GUI getInstance() {
+        if(instance == null) {
+            instance = new GUI();
+        }
+        return instance;
+    }
     public void updateTable(DefaultTableModel model) {
         displayTable.setModel(model);
         scrollResults.repaint();
