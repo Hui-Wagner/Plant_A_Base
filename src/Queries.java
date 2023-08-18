@@ -7,7 +7,6 @@ import java.util.Map;
  * The Queries class provides utility methods for executing and building SQL queries.
  */
 public class Queries {
-
     /**
      * Fetches and prints all records from the PBASIC table in the patrishy_db database.
      *
