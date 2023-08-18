@@ -16,8 +16,6 @@ In order to run the project, you need:
    Select Pperating System -> choose "Platform Indepedent" -> choose "Platform Independent (Architecture Independent), Compressed TAR Archive" -> extract
    
    Go to Intellij -> File -> Project Structure -> Libraries -> add library by clicking "+" -> find folder called " mysql-connector-j-8.1.0" on your computer -> choose "mysql-connector-j-8.1.0.jar"-> Apply -> Ok
-
-   Run the program from Main
     
 
 # Development Platform Used
