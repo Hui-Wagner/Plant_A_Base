@@ -283,11 +283,6 @@ public class Main {
         }
     }
 
-
-
-
-
-
     /**
      * Does the repetitive action for each drop down menu
      * @param jPanel the panel to be added to
