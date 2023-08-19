@@ -1,9 +1,12 @@
-import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+/**
+ * A table with almost any amount of rows and column names
+ * Mainly used to translate query results, which can be a table of any size
+ * to Object[][] that JTable object can use
+ */
 public class InfiniteTable {
     /**
      * the names of each column in the table
