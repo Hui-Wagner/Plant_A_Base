@@ -7,26 +7,89 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.List;
 
+/**
+ * The GUI for the database application for plants
+ */
 public class GUI extends JFrame implements ActionListener{
+    /**
+     * All month options as String[]
+     */
     private static final String[] LIST_MONTHS = new String[]{"None", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    /**
+     * All plant type options as String[]
+     */
     private static final String[] LIST_PLANT_TYPES = new String[]{"None","Trees", "Flowers", "Bushes", "Fruit", "Vegetables", "Succulent", "Vines"};
+    /**
+     * All soil type options as String[]
+     */
     private static final String[] LIST_SOIL_TYPES = new String[]{"None", "Loamy", "Sandy", "Silty", "Peaty", "Chalky", "Clay"};
+    /**
+     * All temperature range options as String[]
+     */
     private static final String[] LIST_TEMP = new String[]{"None", "40F ~ 50F", "50F ~ 60F", "60F ~ 70F", "70F ~ 80F"};
+    /**
+     * All PH range options as String[]
+     */
     private static final String[] LIST_PH = new String[]{"None", "5.0 ~ 5.5", "5.5 ~ 6.0", "6.0 ~ 6.5"};
+    /**
+     * All sun level options as String[]
+     */
     private static final String[] LIST_SUN_LEVEL = new String[]{"None", "Avoid Sunlight", "Somewhat Sunlight", "Love Sunlight"};
+    /**
+     * All water level options as String[]
+     */
     private static final String[] LIST_WATER_LEVEL = new String[]{"None", "Water Need High", "Water Need Medium", "Water Need Low"};
+    /**
+     * Drop down menu of planting types
+     */
     private JComboBox<String> plantingType = new JComboBox<>(LIST_PLANT_TYPES);
+    /**
+     * Drop down menu of planting months
+     */
     private JComboBox<String> plantingMonth = new JComboBox<>(LIST_MONTHS);
+    /**
+     * Drop down menu of blooming months
+     */
     private JComboBox<String> bloomingMonth = new JComboBox<>(LIST_MONTHS);
+    /**
+     * Drop down menu of harvesting months
+     */
     private JComboBox<String> harvestingMonth = new JComboBox<>(LIST_MONTHS);
+    /**
+     * Drop down menu of soil types
+     */
     private JComboBox<String> plantSoilType = new JComboBox<>(LIST_SOIL_TYPES);
+    /**
+     * Drop down menu of plant temperatures
+     */
     private JComboBox<String> plantTemp = new JComboBox<>(LIST_TEMP);
+    /**
+     * Drop down menu of plant PH's
+     */
     private JComboBox<String> plantPH = new JComboBox<>(LIST_PH);
+    /**
+     * Drop down menu of sun levels
+     */
     private JComboBox<String> plantSunLevel = new JComboBox<>(LIST_SUN_LEVEL);
+    /**
+     * Drop down menu of water levels
+     */
     private JComboBox<String> plantWaterLevel = new JComboBox<>(LIST_WATER_LEVEL);
+    /**
+     * the frame of the Database GUI
+     */
     private JFrame frame;
+    /**
+     * the submit button for the query
+     */
     private JButton submitButton = new JButton("Submit");
+    /**
+     * the data table
+     */
     private JTable displayTable;
+    /**
+     * the scroll pane
+     */
     private JScrollPane scrollResults;
 
     public GUI() {
@@ -39,6 +102,10 @@ public class GUI extends JFrame implements ActionListener{
         frame.setVisible(true);
     }
 
+    /**
+     * Sets up the main frame
+     * @return frame
+     */
     private JFrame setUpFrame() {
         JFrame frame = new JFrame("Planting A Base");
         frame.setSize(1500, 500);
@@ -48,6 +115,11 @@ public class GUI extends JFrame implements ActionListener{
         frame.setIconImage(icon.getImage());
         return frame;
     }
+
+    /**
+     * sets up the Center Panel, contains the table
+     * @return
+     */
     private JPanel setUpCenterPanel() {
         JPanel panel = new JPanel();
         // Set Display Table for displaying the data that returns from database
@@ -56,6 +128,11 @@ public class GUI extends JFrame implements ActionListener{
         panel.add(scrollResults);
         return panel;
     }
+
+    /**
+     * Sets up the panel with all the dropdown options
+     * @return JPanel
+     */
     private JPanel setUpLeftPanel(){
         JPanel thePanel = new JPanel();
         thePanel.setPreferredSize(new Dimension(300, 400));
@@ -88,23 +165,15 @@ public class GUI extends JFrame implements ActionListener{
         //Add Water Level label and Water Level drop-down option on GUI
         thePanel.add(addLabelDropDown("Water Level:", plantWaterLevel));
 
-        // Add Submit Button on GUI
-
-
-        thePanel.add(setUpButtonsPanel());
+        thePanel.add(setUpButtonPanel());
 
         return thePanel;
     }
 
-    private JPanel setUpButtonsPanel() {
-        JPanel btnPanel = new JPanel(new BorderLayout());
-        submitButton.addActionListener(this);
-        submitButton.setFocusable(false);
-        btnPanel.setSize(new Dimension(140,40));
-        btnPanel.add(submitButton);
-        return btnPanel;
-    }
-
+    /**
+     * Sets up the logo to fit to scale
+     * @return
+     */
     private JLabel setUpLogo() {
         ImageIcon logo = new ImageIcon("other/logo.png");
         Image logoResized = logo.getImage().getScaledInstance(300,146, Image.SCALE_SMOOTH);
@@ -113,6 +182,36 @@ public class GUI extends JFrame implements ActionListener{
         logoLabel.setIcon(logo);
         return logoLabel;
     }
+    /**
+     * sets up the button
+     * @return
+     */
+    private JPanel setUpButtonPanel() {
+        JPanel btnPanel = new JPanel(new BorderLayout());
+        submitButton.addActionListener(this);
+        submitButton.setFocusable(false);
+        btnPanel.setSize(new Dimension(140,40));
+        btnPanel.add(submitButton);
+        return btnPanel;
+    }
+    /**
+     * Does the repetitive action for each drop down menu
+     * @param label the label for the dropDown jComboBox
+     * @param jComboBox the dropDown menu
+     * @return the JPanel containing both the label and dropdown box
+     */
+    private static JPanel addLabelDropDown(String label, JComboBox jComboBox) {
+        JPanel jPanel = new JPanel(new BorderLayout());
+        JLabel label1 = new JLabel(label);
+        jPanel.add(label1, BorderLayout.NORTH);
+        jComboBox.setPreferredSize(new Dimension(140,20));
+        jPanel.add(jComboBox, BorderLayout.CENTER);
+        return jPanel;
+    }
+
+    /**
+     * makes the query for Queries() and updates the tables accordingly
+     */
     public void makeQuery() {
         // If getSelectedIndex() returns 0, meaning it's on the default option "None"
         int plantType = plantingType.getSelectedIndex();
@@ -218,31 +317,10 @@ public class GUI extends JFrame implements ActionListener{
             ex.printStackTrace();
         }
     }
-
-    /**
-     * Does the repetitive action for each drop down menu
-     * @param label the label for the dropDown jComboBox
-     * @param jComboBox the dropDown menu
-     * @return the JPanel containing both the label and dropdown box
-     */
-    private static JPanel addLabelDropDown(String label, JComboBox jComboBox) {
-        JPanel jPanel = new JPanel(new BorderLayout());
-        JLabel label1 = new JLabel(label);
-        jPanel.add(label1, BorderLayout.NORTH);
-        jComboBox.setPreferredSize(new Dimension(140,20));
-        jPanel.add(jComboBox, BorderLayout.CENTER);
-        return jPanel;
-    }
-
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Button is pushed");
         if(e.getSource() == submitButton) {
             makeQuery();
         }
     }
-    //adjust column width to longest char length + 4
-    //font size, font type
-    //remove resizeable
-    //
 }

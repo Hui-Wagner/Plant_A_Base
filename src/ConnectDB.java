@@ -7,7 +7,6 @@ import java.sql.SQLException;
  */
 public class ConnectDB {
 
-    // Database URL which includes the type of database (MySQL), IP address, port, and database name.
     private static final String URL = "jdbc:mysql://98.59.242.200:3306/patrishy_db";
 
     private static final String USER = "Patrishy";
